@@ -391,8 +391,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 statusMessage.style.top = '58%';
                 statusMessage.style.left = '54%';
             }
-            //запускаем анимацию загрузки
-            loadingPost();
+
             //формируем запрос в формате json
             function postData(data) {
                 return new Promise((resolve, reject) => {
@@ -400,7 +399,11 @@ window.addEventListener('DOMContentLoaded', () => {
     
                     request.open('POST', 'server.php');
                     request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-                
+                    
+                    //слушатель на начало загрузки
+                    request.addEventListener('loadstart', () => {
+                        loadingPost();
+                    });
                     //слушатель на изменение состояния запроса
                     request.addEventListener('readystatechange', () => {
                         // так не работает
@@ -498,7 +501,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             .then(() => {requestEvent('success')})
                     })
                     .catch((err) => {
-                        waitTimeout(1000)
+                        waitTimeout(3000)
                             .then(() => {requestEvent('failure')})
                     })
                     .then(() => {
